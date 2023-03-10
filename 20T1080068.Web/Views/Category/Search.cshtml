@@ -1,0 +1,67 @@
+﻿@model _20T1080068.Web.Models.CategorySearchOutput
+@{
+    Layout = null;
+}
+
+<p style="margin-top: 10px; text-align: center; color: green;">
+    Có <strong>@Model.RowCount</strong> loại hàng trong tổng số <b>@Model.PageCount</b> trang
+</p>
+
+@*Bảng hiển thị kết quả*@
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="bg-success">
+            <tr>
+                <th>Tên loại hàng</th>
+                <th>Mô tả</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.data)
+            {
+                <tr>
+                    <td>@item.CategoryName</td>
+                    <td>@item.Description</td>
+                    <td>
+                        @*Nút sửa dữ liệu*@
+                        <button onclick="showCategoryModal('/Category/Edit/@item.CategoryID')"
+                                onmouseover="showCategoryModal('/Category/Edit/@item.CategoryID')"
+                                class="btn btn-xs btn-primary btnEditCategory" data-toggle="modal"
+                                data-target="#categoryModal-@item.CategoryID">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        @*<a class="btn btn-xs btn-primary" href="~/Category/Edit/@item.CategoryID">
+                                <i class="fa fa-edit"></i>
+                            </a>*@
+                        @*Nút xoá dữ liệu*@
+                        <button onclick="showCategoryModal('/Category/Delete/@item.CategoryID')"
+                                onmouseover="showCategoryModal('/Category/Delete/@item.CategoryID')"
+                                class="btn btn-xs btn-danger" data-toggle="modal" data-target="#deleteCategoryModal-@item.CategoryID">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                        @*<a class="btn btn-xs btn-danger" href="~/Category/Delete/@item.CategoryID">
+                                <i class="fa fa-trash"></i>
+                            </a>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@*Phân trang*@
+<div class="text-center">
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            if (i == Model.Page)
+            {
+                <li class="active"><a>@i</a></li>
+            }
+            else
+            {
+                <li><a href="javascript:;" onclick="doSearch(@i)">@i</a></li>
+            }
+        }
+    </ul>
+</div>

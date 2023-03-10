@@ -1,0 +1,123 @@
+﻿@model _20T1080068.DomainModels.Employees
+@{
+    ViewBag.Title = "Edit";
+
+}
+
+<div class="box box-primary">
+    <div class="box-body">
+        <form class="form-horizontal" enctype="multipart/form-data" action="~/Employees/Save" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="EmployeeID" value="@Model.EmployeeID" />
+            <div style="display: flex; flex-wrap: wrap;">
+                <div style="flex: 2;">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">Họ và tên đệm:</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @style = "width: 95%;", @autofocus = "true" })
+                            @Html.ValidationMessageFor(m => m.FirstName, "", new { @style = "color: #f00;" })
+                            @*<input type="text" class="form-control" style="width: 95%;" name="FirstName" value="@Model.FirstName" placeholder="" autofocus>*@
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">Tên nhân viên:</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @style = "width: 95%;" })
+                            @Html.ValidationMessageFor(m => m.LastName, "", new { @style = "color: #f00;" })
+                            @*<input type="text" class="form-control" style="width: 95%;" name="LastName" value="@Model.LastName" placeholder="">*@
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">Ngày tháng năm sinh:</label>
+                        <div class="col-sm-10">
+                            @Html.HiddenFor(m => m.BirthDate)
+                            @*<input type="hidden" name="BirthDate" value="@string.Format("{0:dd/MM/yyyy}", Model.BirthDate)" />*@
+
+                            @if (Model.EmployeeID > 0)
+
+                            {
+                                <input type="text" class="form-control" style="width: 90%;" name="Birthday"
+                                       value="@string.Format("{0:dd/MM/yyyy}", Model.BirthDate)" placeholder="">
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" style="width: 90%;" name="Birthday" placeholder="Ví dụ: 01/01/2001">
+                            }
+                            @Html.ValidationMessageFor(m => m.BirthDate, "", new { @style = "color: #f00;" })
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-right: 5%;">
+                    <div class="form-group">
+                        <div class="dropzone box" style="width: 100px; height: 80px; border-radius: 3px; text-align: center;">
+                            @if (@Model.Photo != null)
+                            {
+                                <img id="Photo" src="~/Public/Images/Employees/@Model.Photo" width="100" class="upload-icon"
+                                     style="object-fit: contain; object-position: center; cursor: pointer;">
+                            }
+                            else
+                            {
+                                <img id="Photo" src="~/Public/Images/UploadPhoto.jpg" width="100" class="upload-icon"
+                                     style="object-fit: contain; object-position: center; cursor: pointer;">
+                            }
+                            @Html.HiddenFor(m => m.Photo)
+                            <input type="file" accept="image/*" name="UploadPhoto"
+                                   class="upload-input"
+                                   style="cursor: pointer; position: relative; top: -145%; left: 0; width: 100%;
+                                            height: 150%; opacity: 0;"
+                                   onchange="document.getElementById('Photo').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-right: 10%;">
+                <label class="control-label col-sm-2">Địa chỉ email:</label>
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.Email, new { @type = "email", @class = "form-control", @style = "width: 110%" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @style = "color: #f00;" })
+                    @*<input type="email" class="form-control" name="Email" value="@Model.Email" style="width: 110%" placeholder="">*@
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-right: 10%;">
+                <label class="control-label col-sm-2">Ghi chú:</label>
+                <div class="col-sm-10">
+                    @*<input type="text" class="form-control" name="Notes" value="@Model.Notes" style="width: 110%" placeholder="">*@
+                    @Html.TextAreaFor(m => m.Notes, new { @class = "form-control", @style = "width: 110%; height: 225px;" })
+                    @*<textarea class="form-control" name="Notes" style="width: 110%; height: 225px;">@Model.Notes</textarea>*@
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*@Html.ValidationSummary("", new { @style = "color: #f00;" })*@
+                <div class="col-sm-offset-2 col-sm-10 text-right">
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save" style="margin-right: 2px;"></i> Lưu dữ liệu
+                    </button>
+
+                    <a href="~/Employees" class="btn btn-default">
+                        Quay lại
+                    </a>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var input = $("input[autofocus=true]");
+            var len = input.val().length;
+            input[0].focus();
+            input[0].setSelectionRange(len, len);
+        })
+    </script>
+}

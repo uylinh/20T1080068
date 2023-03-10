@@ -1,0 +1,67 @@
+﻿@model _20T1080068.Web.Models.EmployeesSearchOutput
+@{
+    Layout = null;
+}
+<p style="margin-top: 10px; text-align: center; color: green;">
+    Có <strong>@Model.RowCount</strong> nhân viên trong tổng số <b>@Model.PageCount</b> trang
+</p>
+@*Bảng hiển thị kết quả*@
+<div class="container">
+    <div class="row row-no-gutters">
+        @foreach (var item in Model.Data)
+        {
+            <div class="col-md-6" style=" margin: 0 0px 0 0; padding: 0 100px 0 0;">
+                <div class="card mb-3 box box-primary" style="max-width: 600px;">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img class="img-responsive img-rounded"
+                                 style="object-fit: contain; object-position: center;"
+                                 src="~/Public/Images/Employees/@item.Photo" />
+                        </div>
+                        <div class="col-md-8" style="margin: 0 0px 0 0; padding: 0 70px 0 0; ">
+                            <div class="card-body">
+                                <div class="row no-gutters">
+                                    <div class="col-md-6">
+                                        <h4 class="card-title text-center lead"><strong>@item.FirstName @item.LastName</strong></h4>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-right" style="margin: 5%">
+                                            @*Nút sửa dữ liệu*@
+                                            <a href="~/Employees/Edit/@item.EmployeeID" class="btn btn-xm btn-primary">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            @*Nút xoá dữ liệu*@
+                                            <a href="~/Employees/Delete/@item.EmployeeID" class="btn btn-xm btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="card-text">Ngày tháng năm sinh: <span class="text-info">@string.Format("{0:dd/MM/yyyy}", item.BirthDate)</span></p>
+                                <p class="card-text">Địa chỉ email: <span class="text-info">@item.Email</span></p>
+                                <p class="card-text text-muted">Ghi chú: <span class="text-info">@item.Notes</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@*Phân trang*@
+<div class="text-center">
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            if (i == Model.Page)
+            {
+                <li class="active"><a>@i</a></li>
+            }
+            else
+            {
+                <li><a href="javascript:;" onclick="doSearch(@i)">@i</a></li>
+            }
+        }
+    </ul>
+</div>

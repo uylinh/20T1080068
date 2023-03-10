@@ -1,0 +1,82 @@
+﻿@model _20T1080068.DomainModels.Order
+@{
+    ViewBag.Title = "Edit";
+
+}
+
+<div class="box box-primary">
+    <div class="box-body">
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <label class="control-label col-sm-2"> Mã khách hàng:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="" value="@Model.CustomerID" class="form-control" placeholder="" autofocus>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Thời gian đặt hàng:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="@Model.OrderTime" class="form-control" placeholder="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2"> Mã nhân viên:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="@Model.EmployeeID" class="form-control" placeholder="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2"> Thời gian chấp nhận  :</label>
+                <div class="col-sm-10">
+                    <input type="text" value="@Model.AcceptTime" class="form-control" placeholder="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2"> Mã người giao hàng :</label>
+                <div class="col-sm-10">
+                    <input type="text" value="@Model.ShipperID" class="form-control" placeholder="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2"> Thời gian giao hàng :</label>
+                <div class="col-sm-10">
+                    <input type="text" value="@Model.ShippedTime" class="form-control" placeholder="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2"> Thời gian hoàn thành :</label>
+                <div class="col-sm-10">
+                    <input type="text" value="@Model.FinishedTime" class="form-control" placeholder="">
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label class="control-label col-sm-2"> Trạng thái :</label>
+                <div class="col-sm-10">
+                    <input type="text" value="@Model.StatusDescription" class="form-control" placeholder="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10 text-right">
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save" style="margin-right: 2px;"></i> Lưu dữ liệu
+                    </button>
+
+                    <a href="~/Order" class="btn btn-default">
+                        Quay lại
+                    </a>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
