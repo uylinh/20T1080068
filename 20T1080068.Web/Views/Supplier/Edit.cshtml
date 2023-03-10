@@ -46,7 +46,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Quốc gia:</label>
                 <div class="col-sm-10">
-                    @Html.DropDownListFor(m => m.Country, _20T1080068.Web.Codes.SelectListHelper.countries(), new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.Country, _20T1080068.Web.Codes.SelectListHelper.Countries(), new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.Country, "", new { @style = "color:#f00" })
                     @*<select class="form-control" name="Country">
                             <option>--Chọn quốc gia--</option>

@@ -12,7 +12,7 @@ namespace _20T1080068.Web
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            routes.MapMvcAttributeRoutes(); // thêm cái này vào dể cầu hình được router trong controller
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

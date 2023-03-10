@@ -5,7 +5,7 @@ using System.Web;
 
 namespace _20T1080068.Web.Models
 {
-    public class PaginationSearchInput
+    public class PaginationSearchInput 
     {
         /// <summary>
         /// Trang cần hiển thị

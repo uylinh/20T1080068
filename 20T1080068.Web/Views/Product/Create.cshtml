@@ -1,4 +1,4 @@
-﻿
+﻿@model _20T1080068.DomainModels.Product
 @{
     ViewBag.Title = "Bổ sung mặt hàng";
 }
@@ -8,60 +8,76 @@
     </div>
 
     <div class="box-body">
-        <form class="form-horizontal" action="#" method="post">
+        <form class="form-horizontal" action="~/Product/Save" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ProductID" value="@Model.ProductID" />
             <div class="form-group">
                 <label class="control-label col-sm-2">Tên mặt hàng:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="ProductName" autofocus>
+                    @*<input type="text" class="form-control" name="ProductName" autofocus>*@
+                    @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control", @autofocus = "true" })
+                    @Html.ValidationMessageFor(m => m.ProductName, "", new { @style = "color: #f00;" })
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Loại hàng:</label>
                 <div class="col-sm-10">
-                    <select class="form-control" name="categoryID">
-                        <option>-- Loại hàng --</option>
-                        <option>Mỹ phẩm</option>
-                        <option>Thực phẩm</option>
-                    </select>
+                    @*<select class="form-control" name="categoryID">
+                            <option>-- Loại hàng --</option>
+                            <option>Mỹ phẩm</option>
+                            <option>Thực phẩm</option>
+                        </select>*@
+                    @Html.DropDownListFor(m => m.CategoryID, _20T1080068.Web.Codes.SelectListHelper.Categories(),
+                        new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.CategoryID, "", new { @style = "color: #f00;" })
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Nhà cung cấp:</label>
                 <div class="col-sm-10">
-                    <select class="form-control" name="supplierID">
-                        <option>-- Nhà cung cấp --</option>
-                        <option>Công ty TNHH Thành Công</option>
-                        <option>Vina Foods</option>
-                    </select>
+                    @*<select class="form-control" name="supplierID">
+                            <option>-- Nhà cung cấp --</option>
+                            <option>Công ty TNHH Thành Công</option>
+                            <option>Vina Foods</option>
+                        </select>*@
+                    @Html.DropDownListFor(m => m.SupplierID, _20T1080068.Web.Codes.SelectListHelper.Suppliers(),
+                        new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.SupplierID, "", new { @style = "color: #f00;" })
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Đơn vị tính:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="Unit" autofocus>
+                    @*<input type="text" class="form-control" name="Unit">*@
+                    @Html.TextBoxFor(m => m.Unit, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Unit, "", new { @style = "color: #f00;" })
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Giá hàng:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="Price">
+                    @*<input type="text" class="form-control" name="Price">*@
+                    @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Price, "", new { @style = "color: #f00;" })
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Ảnh minh họa:</label>
                 <div class="col-sm-10">
-                    <input type="file" class="form-control" name="Photo" />
+                    <input type="file" value="@Model.Photo" class="form-control" name="productPhoto"
+                           onchange="document.getElementById('Photo').src = window.URL.createObjectURL(this.files[0])" />
+                    @Html.ValidationMessageFor(m => m.Photo, "", new { @style = "color: #f00;" })
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-lg-offset-2 col-sm-10">
-                    <img src="~/Images/Products/samsung_NP900X4C.png" class="img img-bordered" style="width:200px" />
+                    <img id="Photo" src="~/Public/Images/Product" class="img img-bordered" style="width:200px" />
                 </div>
             </div>
 
@@ -70,10 +86,11 @@
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-save"></i> Lưu dữ liệu
                     </button>
-                    <a class="btn btn-warning" href="~/product">
-                        <i class="fa fa-ban"></i> Quay lại
-                    </a>
-                </div>
+                    <a class="btn btn-default" href="~/product">
+                        
+                            Quay lại
+                        </a>
+</div>
             </div>
         </form>
     </div>

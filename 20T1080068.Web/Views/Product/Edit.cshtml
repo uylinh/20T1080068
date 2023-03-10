@@ -1,4 +1,5 @@
-﻿@{
+﻿@model _20T1080068.Web.Models.ProductEditModel
+@{
     ViewBag.Title = "Cập nhật mặt hàng";
 }
 
@@ -13,11 +14,13 @@
     </div>
 
     <div class="box-body">
-        <form class="form-horizontal" action="#" method="post">
+        <form class="form-horizontal" action="~/Product/Save" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
             <div class="form-group">
+                <input type="hidden" name="ProductID" value="@Model.Product.ProductID" />
                 <label class="control-label col-sm-2">Tên mặt hàng:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="ProductName" autofocus>
+                    <input type="text" value="@Model.Product.ProductName" class="form-control" name="ProductName" autofocus>
                 </div>
             </div>
 
@@ -25,9 +28,18 @@
                 <label class="control-label col-sm-2">Loại hàng:</label>
                 <div class="col-sm-10">
                     <select class="form-control" name="categoryID">
-                        <option>-- Loại hàng --</option>
-                        <option>Mỹ phẩm</option>
-                        <option>Thực phẩm</option>
+                        @foreach (var item in _20T1080068.Web.SelectListHelper.Categories())
+                        {
+                            if (item.Value == Model.Product.CategoryID.ToString())
+                            {
+                                <option value="@item.Value" selected>@item.Text</option>
+                            }
+                            else
+                            {
+
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
                     </select>
                 </div>
             </div>
@@ -35,10 +47,19 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Nhà cung cấp:</label>
                 <div class="col-sm-10">
-                    <select class="form-control" name="supplierID">
-                        <option>-- Nhà cung cấp --</option>
-                        <option>Công ty TNHH Thành Công</option>
-                        <option>Vina Foods</option>
+                    <select class="form-control" name="categoryID">
+                        @foreach (var item in _20T1080068.Web.SelectListHelper.Suppliers())
+                        {
+                            if (item.Value == Model.Product.SupplierID.ToString())
+                            {
+                                <option value="@item.Value" selected>@item.Text</option>
+                            }
+                            else
+                            {
+
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
                     </select>
                 </div>
             </div>
@@ -46,27 +67,29 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Đơn vị tính:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="Unit" autofocus>
+                    <input type="text" value="@Model.Product.Unit" class="form-control" name="Unit" autofocus>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Giá hàng:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="Price">
+                    <input type="text" value="@Model.Product.Price" class="form-control" name="Price">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Ảnh minh họa:</label>
                 <div class="col-sm-10">
-                    <input type="file" class="form-control" name="Photo" />
+                    <input type="hidden" name="Photo" value="@Model.Product.Photo" />
+                    <input type="file" class="form-control" name="productPhoto"
+                           onchange="document.getElementById('Photo').src = window.URL.createObjectURL(this.files[0])" />
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-lg-offset-2 col-sm-10">
-                    <img src="~/Images/Products/samsung_NP900X4C.png" class="img img-bordered" style="width:150px" />
+                    <img id="Photo" src="@Model.Product.Photo" class="img img-bordered" style="width:150px" />
                 </div>
             </div>
 
@@ -75,7 +98,7 @@
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-save"></i> Lưu dữ liệu
                     </button>
-                    <a class="btn btn-warning" href="~/product">
+                    <a class="btn btn-default" href="~/product">
                         <i class="fa fa-ban"></i> Quay lại
                     </a>
                 </div>
@@ -85,6 +108,7 @@
     <div class="box-footer text-center">
     </div>
 </div>
+
 
 <div class="box box-info">
     <div class="box-header with-border ">
@@ -104,29 +128,30 @@
                     <th>Thứ tự hiển thị</th>
                     <th>Ẩn ảnh</th>
                     <th class="text-right">
-                        <a class="btn btn-xs btn-primary" href="~/product/photo/add/111">
+                        <a class="btn btn-xs btn-primary" href="~/product/photo/add/@Model.Product.ProductID">
                             <i class="fa fa-plus"></i>
                         </a>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 1; i <= 3; i++)
+                @foreach (var item in Model.ProductPhotos)
                 {
                     <tr>
                         <td style="vertical-align:middle">
-                            <img src="~/Images/Products/Samsung_1.jpg" alt="" style="width:100px" />
+                            <img src="@item.Photo" alt="@item.PhotoID" style="width:100px" />
                         </td>
                         <td style="vertical-align:middle;">
-                            LAPTOP SAMSUNG SERIES 9 NP900X4C i5 3337U 8GB SSD 128GB
+                            @item.Description
                         </td>
-                        <td style="vertical-align:middle;">@i</td>
-                        <td style="vertical-align:middle;"></td>
+                        <td style="vertical-align:middle;">@item.DisplayOrder</td>
+                        <td style="vertical-align:middle;">@(item.IsHidden ? "Đã bị ẩn" : "Đang hiện")</td>
                         <td style="vertical-align:middle; text-align:right">
-                            <a class="btn btn-xs btn-primary" href="~/product/photo/edit/111/222">
+                            <a class="btn btn-xs btn-primary" href="~/product/photo/edit/@item.ProductID/@item.PhotoID">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a class="btn btn-xs btn-danger" href="~/product/photo/delete/111/222" onclick="return confirm('Xóa ảnh của mặt hàng hay không?')">
+                            <a class="btn btn-xs btn-danger" href="~/product/photo/delete/@item.ProductID/@item.PhotoID"
+                               onclick="return confirm('Xóa ảnh của mặt hàng hay không?')">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                         </td>
@@ -158,24 +183,25 @@
                     <th>Giá trị thuộc tính</th>
                     <th>Thứ tự hiển thị</th>
                     <th class="text-right">
-                        <a class="btn btn-xs btn-primary" href="~/product/attribute/add/111">
+                        <a class="btn btn-xs btn-primary" href="~/product/attribute/add/@Model.Product.ProductID">
                             <i class="fa fa-plus"></i>
                         </a>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 1; i <= 5; i++)
+                @foreach (var item in Model.ProductAttributes)
                 {
                     <tr>
-                        <td style="vertical-align:middle">CPU</td>
-                        <td style="vertical-align:middle;">Intel Core i5 3337U 1.8GHz</td>
-                        <td style="vertical-align:middle;">1</td>
+                        <td style="vertical-align:middle">@item.AttributeName</td>
+                        <td style="vertical-align:middle;">@item.AttributeValue</td>
+                        <td style="vertical-align:middle;">@item.DisplayOrder</td>
                         <td style="vertical-align:middle; text-align:right">
-                            <a class="btn btn-xs btn-primary" href="~/product/attribute/edit/111/222">
+                            <a class="btn btn-xs btn-primary" href="~/product/attribute/edit/@item.ProductID/@item.AttributeID">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a class="btn btn-xs btn-danger" href="~/product/attribute/delete/111/222" onclick="return confirm('Xóa thuộc tính này của mặt hàng?')">
+                            <a class="btn btn-xs btn-danger" href="~/product/attribute/delete/@item.ProductID/@item.AttributeID"
+                               onclick="return confirm('Xóa thuộc tính này của mặt hàng?')">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                         </td>
@@ -188,3 +214,13 @@
     </div>
 
 </div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var input = $("input[autofocus]");
+            var len = input.val().length;
+            input[0].focus();
+            input[0].setSelectionRange(len, len);
+        })
+    </script>
+}

@@ -143,6 +143,7 @@
     <Compile Include="Models\PaginationSearchInput.cs" />
     <Compile Include="Models\PaginationSearchOutput.cs" />
     <Compile Include="Models\ProductEditModel.cs" />
+    <Compile Include="Models\ProductSearchIntput.cs" />
     <Compile Include="Models\ProductSearchOutPut.cs" />
     <Compile Include="Models\SupplierSearchOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -6543,10 +6544,13 @@
     <Content Include="Views\Order\Search.cshtml" />
     <Content Include="Views\Custommer\Search.cshtml" />
     <Content Include="Views\Category\Search.cshtml" />
+    <Content Include="Views\Product\Search.cshtml" />
+    <Content Include="Views\Order\UpdateDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Public\Images\Employees\" />
+    <Folder Include="Public\Images\Products\" />
     <Folder Include="Views\Controler\" />
   </ItemGroup>
   <ItemGroup>
