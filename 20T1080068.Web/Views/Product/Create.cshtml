@@ -28,7 +28,7 @@
                             <option>Mỹ phẩm</option>
                             <option>Thực phẩm</option>
                         </select>*@
-                    @Html.DropDownListFor(m => m.CategoryID, _20T1080068.Web.Codes.SelectListHelper.Categories(),
+                    @Html.DropDownListFor(m => m.CategoryID, _20T1080068.Web.SelectListHelper.Categories(),
                         new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.CategoryID, "", new { @style = "color: #f00;" })
                 </div>
@@ -42,7 +42,7 @@
                             <option>Công ty TNHH Thành Công</option>
                             <option>Vina Foods</option>
                         </select>*@
-                    @Html.DropDownListFor(m => m.SupplierID, _20T1080068.Web.Codes.SelectListHelper.Suppliers(),
+                    @Html.DropDownListFor(m => m.SupplierID, _20T1080068.Web.SelectListHelper.Suppliers(),
                         new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.SupplierID, "", new { @style = "color: #f00;" })
                 </div>

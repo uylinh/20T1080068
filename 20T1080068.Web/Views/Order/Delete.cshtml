@@ -1,4 +1,4 @@
-﻿
+﻿@model _20T1080068.DomainModels.Order
 @{
     ViewBag.Title = "Xoá đơn hàng";
 }
@@ -10,42 +10,42 @@
             <div class="form-group">
                 <label class="control-label col-sm-2"> Mã khách hàng:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">873492</p>
+                    <p class="form-control-static">@Model.CustomerID</p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Thời gian đặt hàng :</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">10:09  12/02/2022</p>
+                    <p class="form-control-static">@Model.OrderTime</p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2"> Mã nhân viên :</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">TYOR</p>
+                    <p class="form-control-static">@Model.EmployeeID</p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2"> Thời gian nhận đơn hàng:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">10:09  12/02/2022 </p>
+                    <p class="form-control-static">@Model.AcceptTime </p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Mã người giao hàng:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">002</p>
+                    <p class="form-control-static">@Model.ShipperID</p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Thời gian giao hàng:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">10:09  12/02/2022</p>
+                    <p class="form-control-static">@Model.ShippedTime</p>
                 </div>
             </div>
 
@@ -53,14 +53,14 @@
             <div class="form-group">
                 <label class="control-label col-sm-2"> Thời gian hoàn thành:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static"> 10:09  12/02/2022 </p>
+                    <p class="form-control-static"> @Model.FinishedTime </p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2"> Trạng Thái:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static"> </p>
+                    <p class="form-control-static"> @Model.StatusDescription </p>
                 </div>
             </div>
 

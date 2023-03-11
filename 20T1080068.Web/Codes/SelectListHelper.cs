@@ -145,5 +145,27 @@ namespace _20T1080068.Web
                 }
                 return list;
             }
+        /// <summary>
+        /// Lấy danh sách khách hàng
+        /// </summary>
+        /// <returns></returns>
+        public static List<SelectListItem> Products()
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            list.Add(new SelectListItem()
+            {
+                Value = "0",
+                Text = "--Chọn mặt hàng--"
+            });
+            foreach (var item in ProductDataService.ListProducts(""))
+            {
+                list.Add(new SelectListItem()
+                {
+                    Value = item.ProductID.ToString(),
+                    Text = item. ProductName
+                });
+            }
+            return list;
         }
+    }
  }

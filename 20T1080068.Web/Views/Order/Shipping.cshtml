@@ -1,6 +1,8 @@
 ﻿
 @{
     Layout = null;
+    string OrderID = ViewBag.OrderID.ToString();
+    string CountProducts = ViewBag.CountProducts.ToString(); ;
 }
 
 <div class="modal-dialog">
@@ -12,8 +14,10 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
+                    <input type="hidden" name="id" value="@OrderID" />
+                    <input type="hidden" name="countProducts" value="@CountProducts" />
                     <label class="control-label">Người giao hàng:</label>
-                    <select class="form-control">
+                    <select class="form-control" name="shipperID">
                         <option value="0">-- Chọn người giao hàng ---</option>
                         @foreach (var item in _20T1080068.BusinessLayers.CommonDataService.ListOfShippers())
                         {

@@ -6545,7 +6545,7 @@
     <Content Include="Views\Custommer\Search.cshtml" />
     <Content Include="Views\Category\Search.cshtml" />
     <Content Include="Views\Product\Search.cshtml" />
-    <Content Include="Views\Order\UpdateDetail.cshtml" />
+    <Content Include="Views\Order\CreateDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

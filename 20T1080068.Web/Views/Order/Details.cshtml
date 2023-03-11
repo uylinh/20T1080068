@@ -1,9 +1,17 @@
 ﻿@model _20T1080068.Web.Models.OrderDetailsModel
 @{
-    Layout = null;
+    ViewBag.Title = "Quản lý đơn hàng";
+    string errorMessage = ViewBag.ErrorMessage.ToString() ?? "";
 }
 
 <div class="box box-primary">
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Lỗi!</strong> @errorMessage
+        </div>
+    }
     <div class="box-header text-right">
         <div class="btn-group">
             <!-- //TODO
@@ -22,7 +30,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="~/Order/Shipping/@Model.Order.OrderID" class="btn-modal">
+                        <a href="~/Order/Shipping/@Model.Order.OrderID?countProducts=@Model.OrderDetails.Count" class="btn-modal">
                             Chuyển giao hàng
                         </a>
                     </li>
@@ -124,8 +132,14 @@
 
     <div class="box-body">
         <div class="table-responsive">
+            @*Nút thêm dữ liệu*@
+            <a href="~/Order/Create" class="btn btn-primary" style="right: 5px;">
+                <i class="fa fa-plus" style="margin-right: 2px;"></i> Bổ sung mặt hàng
+            </a>
+
             <table class="table table-bordered table-striped table-hover">
                 <caption><h4>Danh sách mặt hàng thuộc đơn hàng</h4></caption>
+
                 <thead>
                     <tr class="bg-primary">
                         <th class="text-center">STT</th>
@@ -177,9 +191,9 @@
         </div>
     </div>
 </div>
-
 <div id="dialogModal" class="modal fade" role="dialog">
 </div>
+
 
 @section scripts {
     <script>

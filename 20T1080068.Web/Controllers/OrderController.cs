@@ -17,16 +17,20 @@ namespace _20T1080068.Web.Controllers
     [RoutePrefix("Order")]
     public class OrderController : Controller
     {
-        private const string SHOPPING_CART = "ShoppingCart";
-        private const string ERROR_MESSAGE = "ErrorMessage";
-        private const int PAGE_SIZE = 4;
-        private const string SESSION_CONDITION = "OrderCondition";
-        private const string Status = "";
-        /// <summary>
-        /// Tìm kiếm, phân trang
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Index()
+       
+            private const string SHOPPING_CART = "ShoppingCart";
+            private const string ERROR_MESSAGE = "ErrorMessage";
+            private const string SESSION_CONDITION = "OrderCondition";
+            private const string CUSTOMERID = "CustomerID";
+            private const string EMPLOYEEID = "EmployeeID";
+            private const int PAGE_SIZE = 4;
+            
+
+            /// <summary>
+            /// Tìm kiếm, phân trang
+            /// </summary>
+            /// <returns></returns>
+            public ActionResult Index()
         {
             //TODO: Code chức năng tìm kiếm, phân trang cho đơn hàng
 
@@ -99,34 +103,81 @@ namespace _20T1080068.Web.Controllers
         /// </summary>
         /// <param name="orderID"></param>
         /// <param name="productID"></param>
-        /// <returns></returns>
         [Route("EditDetail/{orderID}/{productID}")]
         public ActionResult EditDetail(int orderID = 0, int productID = 0)
         {
-            //TODO: Code chức năng để lấy chi tiết đơn hàng cần edit
+            //DONE: Code chức năng để lấy chi tiết đơn hàng cần edit
+            if (orderID < 0)
             {
-                if (orderID <= 0 || productID <= 0)
-                    return RedirectToAction("Index");
-                var data = OrderDataService.GetOrderDetail(orderID, productID);
-                if (data == null)
-                    return RedirectToAction("Index");
-
-                ViewBag.Title = "Cập nhật đơn hàng";
-                return View(data);
+                return RedirectToAction("Index");
             }
-
+            if (productID < 0)
+            {
+                return RedirectToAction($"Details/{orderID}");
+            }
+            OrderDetail orderDetail = OrderDataService.GetOrderDetail(orderID, productID);
+            if (orderDetail == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(orderDetail);
+        }
+        /// <summary>
+        /// Giao diện Bổ sung mặt hàng trong chi tiết đơn hàng
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CreateDetail(int orderID = 0, int productID = 0)
+            
+        {
+            if (orderID <= 0 || productID <= 0)
+            {
+                return View();
+            }
+            var order = OrderDataService.GetOrder(orderID);
+            if (order.Status == OrderStatus.INIT)
+            {
+                Product data = ProductDataService.GetProduct(productID);
+                return View(productID.ToString());
+            }
+            return RedirectToAction($"Details/{orderID}");
         }
         /// <summary>
         /// Thay đổi thông tin chi tiết đơn hàng
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult UpdateDetail(OrderDetail data)
         {
-            //TODO: Code chức năng để cập nhật chi tiết đơn hàng
+            //DONE: Code chức năng để cập nhật chi tiết đơn hàng
+            // kiểm tra dữ liệu đầu vào
+            // Mã mặt hàng
+            if (data.ProductID <= 0)
+            {
+                TempData[ERROR_MESSAGE] =$"Mã đơn hàng không tồn tại";
+                return RedirectToAction($"Details/{data.OrderID}");
+            }
+            // Số lượng
+            if (data.Quantity < 1)
+            {
 
+                TempData[ERROR_MESSAGE] = $"Số lượng không hợp lệ ";
+                return RedirectToAction($"Details/{data.OrderID}");
+            }
+
+            // Đơn giá
+            if (data.SalePrice < 1)
+            {
+
+                TempData[ERROR_MESSAGE] = $"Đơn giá không hợp lệ";
+                return RedirectToAction($"Details/{data.OrderID}");
+            }
+
+            // Cập nhật chi tiết 1 đơn hàng nếu kiểm tra đúng hết
+            OrderDataService.SaveOrderDetail(data.OrderID, data.ProductID, data.Quantity, data.SalePrice);
             return RedirectToAction($"Details/{data.OrderID}");
+
         }
         /// <summary>
         /// Xóa 1 chi tiết trong đơn hàng
@@ -136,9 +187,23 @@ namespace _20T1080068.Web.Controllers
         /// <returns></returns>
         [Route("DeleteDetail/{orderID}/{productID}")]
         public ActionResult DeleteDetail(int orderID = 0, int productID = 0)
-        {
-            //TODO: Code chức năng xóa 1 chi tiết trong đơn hàng
+        { //DONE: Code chức năng xóa 1 chi tiết trong đơn hàng
+            if (orderID < 0)
+            {
+                return RedirectToAction("Index");
+            }
+            if (productID < 0)
+            {
+                return RedirectToAction($"Details/{orderID}");
+            }
 
+            // Xoá chi tiết 1 đơn hàng nếu kiểm tra đúng hết
+            bool isDeleted = OrderDataService.DeleteOrderDetail(orderID, productID);
+            if (!isDeleted)
+            {
+                TempData[ERROR_MESSAGE] = "Không thể xoá mặt hàng này";
+                return RedirectToAction($"Details/{productID}");
+            }
             return RedirectToAction($"Details/{orderID}");
         }
         /// <summary>
@@ -148,17 +213,31 @@ namespace _20T1080068.Web.Controllers
         /// <returns></returns>
         public ActionResult Delete(int id = 0)
         {
-            //TODO: Code chức năng để xóa đơn hàng (nếu được phép xóa)
+            //DONE: Code chức năng để xóa đơn hàng (nếu được phép xóa)
+            if (id < 0)
             {
-                if (id <= 0)
-                    return RedirectToAction("Index");
-                var data = OrderDataService.GetOrder(id);
-                if (data == null)
-                    return RedirectToAction("Index");
-
-                ViewBag.Title = "Xoá đơn hàng";
-                return View(data);
+                return RedirectToAction("Index");
             }
+            Order data = OrderDataService.GetOrder(id);
+            if (data == null)
+            {
+                return RedirectToAction("Index");
+            }
+            // Xoá đơn hàng ở trạng thái vừa tạo, bị huỷ hoặc bị từ chối
+            if (data.Status == OrderStatus.INIT
+                || data.Status == OrderStatus.CANCEL
+                || data.Status == OrderStatus.REJECTED)
+            {
+                bool isDeleted = OrderDataService.DeleteOrder(id);
+                if (!isDeleted)
+                {
+                    TempData[ERROR_MESSAGE] = $"Xoá đơn hàng thất bại";
+                    return RedirectToAction($"Details/{data.OrderID}");
+                }
+                return RedirectToAction("Index");
+            }
+            TempData[ERROR_MESSAGE] = $"Xoá đơn hàng thất bại vì trạng thái đơn hàng hiện tại là: {data.StatusDescription}";
+            return RedirectToAction($"Details/{data.OrderID}");
         }
         /// <summary>
         /// Chấp nhận đơn hàng
@@ -167,8 +246,23 @@ namespace _20T1080068.Web.Controllers
         /// <returns></returns>
         public ActionResult Accept(int id = 0)
         {
-            //TODO: Code chức năng chấp nhận đơn hàng (nếu được phép)
-
+            //DONE: Code chức năng chấp nhận đơn hàng (nếu được phép)
+            if (id <= 0)
+            {
+                return RedirectToAction("Index");
+            }
+            Order data = OrderDataService.GetOrder(id);
+            if (data == null)
+            {
+                return RedirectToAction("Index");
+            }
+            bool isAccepted = OrderDataService.AcceptOrder(id);
+            if (!isAccepted)
+            {
+                TempData[ERROR_MESSAGE] =
+                    $"Chấp nhận đơn hàng thất bại vì trạng thái đơn hàng hiện tại là: {data.StatusDescription}";
+                return RedirectToAction($"Details/{data.OrderID}");
+            }
             return RedirectToAction($"Details/{id}");
         }
         /// <summary>
@@ -176,13 +270,42 @@ namespace _20T1080068.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Shipping(int id = 0, int shipperID = 0)
+        public ActionResult Shipping(int id = 0, int shipperID = 0, int countProducts = 0)
         {
-            //TODO: Code chức năng chuyển đơn hàng sang trạng thái đang giao hàng (nếu được phép)
-
+            //DONE: Code chức năng chuyển đơn hàng sang trạng thái đang giao hàng (nếu được phép)
+            if (id < 0)
+            {
+                return RedirectToAction("Index");
+            }
             if (Request.HttpMethod == "GET")
+            {
+                ViewBag.OrderID = id;
+                ViewBag.CountProducts = countProducts;
                 return View();
+            }
 
+            Order data = OrderDataService.GetOrder(id);
+            if (data == null)
+            {
+                return RedirectToAction("Index");
+            }
+            if (shipperID <= 0)
+            {
+                TempData[ERROR_MESSAGE] = "Bạn phải chọn đơn vị vận chuyển";
+                return RedirectToAction($"Details/{id}");
+            }
+            if (countProducts <= 0)
+            {
+                TempData[ERROR_MESSAGE] = "Không có mặt hàng nào để chuyển giao";
+                return RedirectToAction($"Details/{id}");
+            }
+            bool isShipped = OrderDataService.ShipOrder(id, shipperID);
+            if (!isShipped)
+            {
+                TempData[ERROR_MESSAGE] =
+                    $"Xác nhận chuyển đơn hàng cho người giao hàng thất bại vì trạng thái đơn hàng hiện tại là: {data.StatusDescription}";
+                return RedirectToAction($"Details/{data.OrderID}");
+            }
             return RedirectToAction($"Details/{id}");
         }
         /// <summary>
@@ -192,8 +315,24 @@ namespace _20T1080068.Web.Controllers
         /// <returns></returns>
         public ActionResult Finish(int id = 0)
         {
-            //TODO: Code chức năng ghi nhận hoàn tất đơn hàng (nếu được phép)
+            //DONE: Code chức năng ghi nhận hoàn tất đơn hàng (nếu được phép)
+            if (id < 0)
+            {
+                return RedirectToAction("Index");
+            }
 
+            Order data = OrderDataService.GetOrder(id);
+            if (data == null)
+            {
+                return RedirectToAction("Index");
+            }
+            bool isFinished = OrderDataService.FinishOrder(id);
+            if (!isFinished)
+            {
+                TempData[ERROR_MESSAGE] =
+                    $"Xác nhận hoàn tất đơn hàng thất bại vì trạng thái đơn hàng hiện tại là: {data.StatusDescription}";
+                return RedirectToAction($"Details/{data.OrderID}");
+            }
             return RedirectToAction($"Details/{id}");
         }
         /// <summary>
@@ -203,8 +342,25 @@ namespace _20T1080068.Web.Controllers
         /// <returns></returns>
         public ActionResult Cancel(int id = 0)
         {
-            //TODO: Code chức năng hủy đơn hàng (nếu được phép)
+            //DONE: Code chức năng hủy đơn hàng (nếu được phép)
+            if (id < 0)
+            {
+                return RedirectToAction("Index");
+            }
 
+            Order data = OrderDataService.GetOrder(id);
+            if (data == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            bool isCanceled = OrderDataService.CancelOrder(id);
+            if (!isCanceled)
+            {
+                TempData[ERROR_MESSAGE] =
+                    $"Hủy bỏ đơn hàng thất bại vì trạng thái đơn hàng hiện tại là: {data.StatusDescription}";
+                return RedirectToAction($"Details/{data.OrderID}");
+            }
             return RedirectToAction($"Details/{id}");
         }
         /// <summary>
@@ -214,8 +370,25 @@ namespace _20T1080068.Web.Controllers
         /// <returns></returns>
         public ActionResult Reject(int id = 0)
         {
-            //TODO: Code chức năng từ chối đơn hàng (nếu được phép)
+            //DONE: Code chức năng từ chối đơn hàng (nếu được phép)
+            if (id < 0)
+            {
+                return RedirectToAction("Index");
+            }
 
+            Order data = OrderDataService.GetOrder(id);
+            if (data == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            bool isRejected = OrderDataService.RejectOrder(id);
+            if (!isRejected)
+            {
+                TempData[ERROR_MESSAGE] =
+                    $"Từ chối đơn hàng thất bại vì trạng thái đơn hàng hiện tại là: {data.StatusDescription}";
+                return RedirectToAction($"Details/{data.OrderID}");
+            }
             return RedirectToAction($"Details/{id}");
         }
 
@@ -241,6 +414,8 @@ namespace _20T1080068.Web.Controllers
         public ActionResult Create()
         {
             ViewBag.ErrorMessage = TempData[ERROR_MESSAGE] ?? "";
+            ViewBag.CustomerID = TempData[CUSTOMERID] ?? "";
+            ViewBag.EmployeeID = TempData[EMPLOYEEID] ?? "";
             return View(GetShoppingCart());
         }
         /// <summary>

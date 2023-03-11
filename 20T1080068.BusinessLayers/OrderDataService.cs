@@ -86,14 +86,6 @@ namespace _20T1080068.BusinessLayers
 
             //TODO: Kiểm tra xem việc hủy bỏ đơn hàng có hợp lý đối với trạng thái hiện tại của đơn hàng hay không?
             //... Your code here ...
-            // Để huỷ đơn hàng được thì trạng thái hiện tại của đơn hàng sẽ như thế nào?
-            //  muốn huỷ đơn thì trạng thái hiện tại của nó chỉ 
-            // chưa duyệt
-            // trạng thái xác nhận
-
-            // nếu đơn ở trạng thái hiện tại là khởi tạo đang chờ duyệt
-            // hoặc ở trạng thái đã chấp nhận nhưng chưa giao
-            // trường hợp huỷ được
             if (data.Status == OrderStatus.INIT || data.Status == OrderStatus.ACCEPTED)
             {
                 data.Status = OrderStatus.CANCEL;
@@ -181,10 +173,10 @@ namespace _20T1080068.BusinessLayers
             if (data == null)
                 return false;
 
-            //TODO: Kiểm tra xem việc ghi nhận đơn hàng kết thúc thành công có hợp lý đối với trạng thái hiện tại của đơn hàng hay không?
-            //... Your code here ...
-            if ( data.Status == OrderStatus.SHIPPING)
-            {
+            //DONE: Kiểm tra xem việc ghi nhận đơn hàng kết thúc thành công có hợp lý đối với trạng thái hiện tại của đơn hàng hay không?
+            //Đơn hàng được ghi nhận là kết thúc thành công khi trạng thái hiện tại của đơn hàng thuộc một trong các trạng thái:
+            // - Đơn hàng đang được giao: 3 (khi đã giao hàng thành công)
+            if (data.Status == OrderStatus.SHIPPING) {
                 data.Status = OrderStatus.FINISHED;
                 data.FinishedTime = DateTime.Now;
                 return orderDB.Update(data);
@@ -240,7 +232,16 @@ namespace _20T1080068.BusinessLayers
         /// <returns></returns>
         public static int SaveOrderDetail(int orderID, int productID, int quantity, decimal salePrice)
         {
-            return orderDB.SaveDetail(orderID, productID, quantity, salePrice);
+            Order data = GetOrder(orderID);
+            if (data == null)
+            {
+                return 0;
+            }
+            if (data.Status == OrderStatus.INIT)
+            {
+                return orderDB.SaveDetail(orderID, productID, quantity, salePrice);
+            }
+            return 0;
         }
         /// <summary>
         /// Xóa 1 chi tiết trong đơn hàng
@@ -250,7 +251,17 @@ namespace _20T1080068.BusinessLayers
         /// <returns></returns>
         public static bool DeleteOrderDetail(int orderID, int productID)
         {
-            return orderDB.DeleteDetail(orderID, productID);
+            Order data = GetOrder(orderID);
+            if (data == null)
+            {
+                return false;
+            }
+            if (data.Status == OrderStatus.INIT)
+            {
+                return orderDB.DeleteDetail(orderID, productID);
+            }
+
+            return false;
         }
 
 

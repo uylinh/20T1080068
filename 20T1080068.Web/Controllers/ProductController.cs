@@ -132,7 +132,7 @@ namespace _20T1080068.Web.Controllers
             // xử lý nghiệp vụ upload file
             if (productPhoto != null)
             {
-                string storage = Server.MapPath($"~/Public/Images/Product");
+                string storage = Server.MapPath($"~/Public/Images/Products");
                 string fileName = $"{DateTime.Now.Ticks}-{productPhoto.FileName}";
                 string filePath = System.IO.Path.Combine(storage, fileName);
                 productPhoto.SaveAs(filePath);

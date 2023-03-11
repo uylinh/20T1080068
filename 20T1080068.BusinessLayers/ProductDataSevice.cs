@@ -62,6 +62,7 @@ namespace _20T1080068.BusinessLayers
         public static Product GetProduct(int productID)
         {
             return productDB.Get(productID);
+
         }
         /// <summary>
         /// Thêm một mặt hàng
